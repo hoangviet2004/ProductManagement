@@ -10,9 +10,13 @@ import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import StarBorder from '@mui/icons-material/StarBorder';
-
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import logoImg from '../assets/logo.png';
-
+import WorkHistoryIcon from '@mui/icons-material/WorkHistory';
+import InventoryIcon from '@mui/icons-material/Inventory';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import SourceIcon from '@mui/icons-material/Source';
+import SavingsIcon from '@mui/icons-material/Savings';
 const drawerWidth = 250;
 
 export default function Sidebar({ onMenuClick }) {
@@ -55,13 +59,13 @@ export default function Sidebar({ onMenuClick }) {
             <List component="div" disablePadding>
               {/* Gửi mã 'create_order' */}
               <ListItemButton sx={{ pl: 4 }} onClick={() => onMenuClick('create_order')}>
-                <ListItemIcon><StarBorder /></ListItemIcon>
-                <ListItemText primary="Tạo đơn mới" />
+                <ListItemIcon><ReceiptLongIcon /></ListItemIcon>
+                <ListItemText primary="Bán hàng tại quầy" />
               </ListItemButton>
               {/* Gửi mã 'order_list' */}
               <ListItemButton sx={{ pl: 4 }} onClick={() => onMenuClick('order_list')}>
-                <ListItemIcon><StarBorder /></ListItemIcon>
-                <ListItemText primary="Danh sách đơn" />
+                <ListItemIcon><WorkHistoryIcon /></ListItemIcon>
+                <ListItemText primary="Lịch sử giao dịch" />
               </ListItemButton>
             </List>
           </Collapse>
@@ -76,15 +80,15 @@ export default function Sidebar({ onMenuClick }) {
             <List component="div" disablePadding>
               {/* Gửi mã 'product_list' */}
               <ListItemButton sx={{ pl: 4 }} onClick={() => onMenuClick('product_list')}>
-                <ListItemIcon><StarBorder /></ListItemIcon>
-                <ListItemText primary="Danh sách SP" />
+                <ListItemIcon><SourceIcon /></ListItemIcon>
+                <ListItemText primary="Sản phẩm" />
               </ListItemButton>
               <ListItemButton sx={{ pl: 4 }} onClick={() => onMenuClick('import_warehouse')}>
-                <ListItemIcon><StarBorder /></ListItemIcon>
-                <ListItemText primary="Nhập kho" />
+                <ListItemIcon><AddShoppingCartIcon /></ListItemIcon>
+                <ListItemText primary="Nhập hàng" />
               </ListItemButton>
               <ListItemButton sx={{ pl: 4 }} onClick={() => onMenuClick('import_warehouse')}>
-                <ListItemIcon><StarBorder /></ListItemIcon>
+                <ListItemIcon><InventoryIcon /></ListItemIcon>
                 <ListItemText primary="Kiểm kho" />
               </ListItemButton>
             </List>
@@ -99,7 +103,7 @@ export default function Sidebar({ onMenuClick }) {
           <Collapse in={openFinance} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
               <ListItemButton sx={{ pl: 4 }} onClick={() => onMenuClick('revenue')}>
-                <ListItemIcon><StarBorder /></ListItemIcon>
+                <ListItemIcon><SavingsIcon /></ListItemIcon>
                 <ListItemText primary="Doanh thu" />
               </ListItemButton>
             </List>
