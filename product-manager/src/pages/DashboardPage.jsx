@@ -1,4 +1,3 @@
-// src/pages/DashboardPage.jsx
 import React from 'react';
 import { Box, CssBaseline, Toolbar, Container, Typography, Button, IconButton } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
@@ -6,7 +5,6 @@ import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-// Đảm bảo đường dẫn import đúng với máy bạn (../components/...)
 import TopBar from "../components/TopBar";
 import Sidebar from "../components/Sidebar"; 
 
