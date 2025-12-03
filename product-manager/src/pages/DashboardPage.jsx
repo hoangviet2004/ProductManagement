@@ -115,44 +115,58 @@ export default function DashboardPage({ user, onLogout }) {
   const [currentView, setCurrentView] = useState("dashboard");
 
   // --- COMPONENT CON: THẺ THỐNG KÊ ---
+  // --- COMPONENT CON: THẺ THỐNG KÊ (PHIÊN BẢN TO & THOÁNG) ---
   const StatCard = ({ title, icon, color, items, totalValue }) => (
     <Paper
       elevation={0}
       sx={{
-        p: 4, // Padding vừa phải
+        p: 3, // Tăng padding lên 3 cho thoáng
         border: "1px solid #e0e0e0",
-        borderRadius: 4,
+        borderRadius: 4, // Bo tròn nhiều hơn chút cho hiện đại
         height: "100%",
+        minHeight: "260px", // QUAN TRỌNG: Ép thẻ phải cao ít nhất 260px
         display: "flex",
         flexDirection: "column",
-        justifyContent: "space-between",
+        justifyContent: "space-between", // Căn đều nội dung trên dưới
+        transition: "transform 0.2s", // Hiệu ứng hover nhẹ
+        "&:hover": {
+           transform: "translateY(-4px)",
+           boxShadow: "0 4px 20px rgba(0,0,0,0.1)"
+        }
       }}
     >
-      {/* 1. Header của Card */}
-      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2, alignItems: "center" }}>
-        <Box>
-           <Typography
-            color="textSecondary"
-            variant="subtitle2"
-            fontWeight={700}
-            sx={{ textTransform: "uppercase", letterSpacing: 0.5, fontSize: '11px' }}
-          >
-            {title}
-          </Typography>
-          {/* Nếu có tổng số (Total Value) thì hiện ở đây */}
-          {totalValue && (
-             <Typography variant="h5" fontWeight="bold" color={color}>
+      {/* 1. Header: Tiêu đề và Tổng số to */}
+      <Box>
+        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", mb: 2 }}>
+           <Box>
+              <Typography
+                color="textSecondary"
+                variant="subtitle2"
+                fontWeight={700}
+                sx={{ textTransform: "uppercase", letterSpacing: 1, mb: 1 }}
+              >
+                {title}
+              </Typography>
+              <Typography variant="h4" fontWeight="800" sx={{ color: "#2d3748" }}>
                 {totalValue}
-             </Typography>
-          )}
-        </Box>
-        <Box sx={{ p: 1, borderRadius: "50%", bgcolor: `${color}15`, color: color }}>
-          {icon}
+              </Typography>
+           </Box>
+           <Box 
+             sx={{ 
+               p: 1.5, 
+               borderRadius: "12px", 
+               bgcolor: `${color}15`, 
+               color: color,
+               display: 'flex', alignItems: 'center', justifyContent: 'center'
+             }}
+           >
+             {icon}
+           </Box>
         </Box>
       </Box>
 
       {/* 2. Danh sách chi tiết (List Items) */}
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, flex : 1 }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, mt: 2 }}>
         {items.map((item, index) => (
           <Box 
             key={index} 
@@ -160,39 +174,38 @@ export default function DashboardPage({ user, onLogout }) {
                 display: 'flex', 
                 justifyContent: 'space-between', 
                 alignItems: 'center',
-                pb: index !== items.length - 1 ? 1 : 0, // Border dưới trừ item cuối
-                borderBottom: index !== items.length - 1 ? '1px dashed #eee' : 'none'
+                pb: 1,
+                borderBottom: index !== items.length - 1 ? '1px dashed #f1f5f9' : 'none'
             }}
           >
-            {/* Cột trái: Tên / Label */}
+            {/* Cột trái */}
             <Box>
-                <Typography variant="body2" fontWeight={600} sx={{ color: '#333' }}>
+                <Typography variant="body2" fontWeight={600} sx={{ color: '#475569' }}>
                     {item.label || item.name}
                 </Typography>
-                <Typography variant="caption" color="textSecondary" sx={{ fontSize: '10px' }}>
+                <Typography variant="caption" color="textSecondary">
                     {item.sub || item.id || `${item.unit}`}
                 </Typography>
             </Box>
 
-            {/* Cột phải: Giá trị / Trạng thái */}
+            {/* Cột phải */}
             <Box sx={{ textAlign: 'right' }}>
-                 {/* Nếu là số tiền/số lượng */}
                  {(item.value || item.stock !== undefined) && (
-                    <Typography variant="body2" fontWeight={700} color={color}>
+                    <Typography variant="body2" fontWeight={700} sx={{ color: color }}>
                         {item.value || item.stock}
                     </Typography>
                  )}
-                 {/* Nếu là trạng thái (status) */}
                  {item.status && (
                     <Chip 
                         label={item.status} 
                         size="small" 
                         sx={{ 
-                            height: 20, 
-                            fontSize: '9px', 
-                            bgcolor: `${color}10`, 
+                            height: 24, // Chip to hơn chút
+                            fontSize: '11px', 
+                            bgcolor: `${color}15`, 
                             color: color,
-                            fontWeight: 700
+                            fontWeight: 700,
+                            borderRadius: '6px'
                         }} 
                     />
                  )}
@@ -208,88 +221,93 @@ export default function DashboardPage({ user, onLogout }) {
       // 1. DASHBOARD
       case "dashboard":
         return (
-          <Box sx={{ width: "100%", boxSizing: "border-box" }}>
-            <Typography variant="h5" sx={{ mb: 3, fontWeight: "bold", color: "#1a237e" }}>
+          <Box sx={{ width: "100%", display: "flex", flexDirection: "column", gap: 3 }}>
+            
+            <Typography variant="h5" sx={{ fontWeight: "800", color: "#1e293b", letterSpacing: -0.5 }}>
               Tổng quan kinh doanh
             </Typography>
 
-            {/* GRID CONTAINER CHO 3 CARD TRÊN */}
-            <Grid container spacing={3} sx={{ width: "100%", margin: 0 }}>
+            {/* --- HÀNG TRÊN: CÁC THẺ STATS --- */}
+            <Grid container spacing={3} sx={{ width: "100%", m: 0 }}>
               
-              {/* CARD 1: DOANH THU (Có chi tiết tiền mặt/chuyển khoản) */}
-              <Grid item xs={12} md={4} sx={{ paddingLeft: "24px !important" }}>
+              <Grid item xs={12} md={4} sx={{ paddingLeft: "100px !important" }}>
                 <StatCard
-                  title="DOANH THU HÔM NAY"
-                  totalValue="15.200.000₫" // Vẫn hiện số tổng
-                  icon={<AttachMoneyIcon />}
-                  color="#2e7d32" // Xanh lá
-                  items={revenueDetails} // Truyền dữ liệu chi tiết vào
+                  title="Doanh thu ngày"
+                  totalValue="15.200.000₫"
+                  icon={<AttachMoneyIcon fontSize="large" />} // Icon to
+                  color="#10b981" // Xanh lá tươi
+                  items={revenueDetails}
                 />
               </Grid>
 
-              {/* CARD 2: ĐƠN HÀNG MỚI (List đơn hàng) */}
-              <Grid item xs={12} md={4} sx={{ paddingLeft: "24px !important" }}>
+              <Grid item xs={12} md={4} sx={{ paddingLeft: "50px !important" }}>
                 <StatCard
-                  title="ĐƠN HÀNG MỚI"
+                  title="Đơn hàng mới"
                   totalValue="18"
-                  icon={<ShoppingCartIcon />}
-                  color="#1976d2" // Xanh dương
-                  items={newOrdersMini} // List đơn hàng
+                  icon={<ShoppingCartIcon fontSize="large" />}
+                  color="#3b82f6" // Xanh dương tươi
+                  items={newOrdersMini}
                 />
               </Grid>
 
-              {/* CARD 3: SẮP HẾT HÀNG (List sản phẩm) */}
-              <Grid item xs={12} md={4} sx={{ paddingLeft: "24px !important" }}>
+              <Grid item xs={12} md={4} sx={{ paddingLeft: "50px !important" }}>
                 <StatCard
-                  title="CẢNH BÁO KHO"
+                  title="Cảnh báo kho"
                   totalValue="5 SP"
-                  icon={<WarningAmberIcon />}
-                  color="#ed6c02" // Cam
-                  items={lowStockMini} // List sản phẩm sắp hết
+                  icon={<WarningAmberIcon fontSize="large" />}
+                  color="#f59e0b" // Cam tươi
+                  items={lowStockMini}
                 />
               </Grid>
+            </Grid>
 
-              {/* ... (GIỮ NGUYÊN PHẦN BIỂU ĐỒ VÀ TABLE DƯỚI ĐÂY) ... */}
-              <Grid item xs={12} lg={8} sx={{ paddingLeft: "24px !important", mt: 3 }}>
-                 {/* ... Code Biểu đồ giữ nguyên ... */}
-                 <Paper sx={{ p: 3, borderRadius: 2, boxShadow: 2, height: "450px", width: "100%" }}>
-                    <Typography variant="h6" sx={{ mb: 2 }}>Phân tích doanh thu</Typography>
-                    <div style={{ width: "100%", height: "90%" }}>
+            {/* --- HÀNG DƯỚI: BIỂU ĐỒ & BẢNG --- */}
+            <Grid container spacing={3} sx={{ width: "100%", m: 0 }}>
+              
+              <Grid item  sx={{ paddingLeft: "100px !important", width: { xs: "100%", lg: "55%" } }}>
+                 <Paper sx={{ p: 3, borderRadius: 4, boxShadow: "none", border: "1px solid #e0e0e0", height: "500px", width: "100%" }}>
+                    <Typography variant="h6" fontWeight={700} sx={{ mb: 3 }}>Phân tích doanh thu</Typography>
+                    <Box sx={{ width: "100%", height: "90%" }}>
                       <BarChart
                         dataset={chartLabels.map((label, index) => ({
                           day: label,
                           tuanNay: dataTuanNay[index],
                           tuanTruoc: dataTuanTruoc[index],
                         }))}
-                        xAxis={[{ scaleType: "band", dataKey: "day" }]}
+                        xAxis={[{ scaleType: "band", dataKey: "day", categoryGapRatio: 0.4 }]} // categoryGapRatio: chỉnh độ rộng cột
                         series={[
                           { dataKey: "tuanNay", label: "Tuần này", color: "#3b82f6" },
-                          { dataKey: "tuanTruoc", label: "Tuần trước", color: "#cbd5e1" },
+                          { dataKey: "tuanTruoc", label: "Tuần trước", color: "#e2e8f0" },
                         ]}
                         slotProps={{ legend: { hidden: false } }}
-                        borderRadius={4}
+                        borderRadius={6}
                       />
-                    </div>
+                    </Box>
                  </Paper>
               </Grid>
 
-              <Grid item xs={12} lg={4} sx={{ paddingLeft: "24px !important", mt: 3 }}>
-                 {/* ... Code Table giữ nguyên ... */}
-                 <Paper sx={{ p: 0, borderRadius: 2, boxShadow: 2, height: "450px", width: "100%", display: "flex", flexDirection: "column" }}>
-                    <Box sx={{ p: 2, borderBottom: "1px solid #eee" }}>
-                      <Typography variant="h6">Giao dịch mới</Typography>
+              <Grid item xs={12} lg={3} sx={{ paddingLeft: "22px !important" }}>
+                 <Paper sx={{ p: 0, borderRadius: 4, boxShadow: "none", border: "1px solid #e0e0e0", height: "500px", width: "100%", display: "flex", flexDirection: "column" }}>
+                    <Box sx={{ p: 3, borderBottom: "1px solid #f1f5f9", display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <Typography variant="h6" fontWeight={700}>Giao dịch mới</Typography>
+                      <Button size="small" endIcon={<ArrowForwardIcon />}>Xem tất cả</Button>
                     </Box>
                     <Box sx={{ overflow: "auto", flex: 1 }}>
                       <Table>
                         <TableBody>
                           {recentOrders.map((row) => (
-                            <TableRow key={row.id}>
-                              <TableCell>
-                                <Typography variant="subtitle2" fontWeight="bold">{row.customer}</Typography>
-                                <Typography variant="caption">{row.id}</Typography>
+                            <TableRow key={row.id} hover>
+                              <TableCell sx={{ borderBottom: "1px solid #f8fafc", py: 2 }}>
+                                <Box>
+                                    <Typography variant="subtitle2" fontWeight={700} color="#334155">{row.customer}</Typography>
+                                    <Typography variant="caption" color="textSecondary">{row.id}</Typography>
+                                </Box>
                               </TableCell>
-                              <TableCell align="right">
-                                <Typography fontWeight="bold">{row.total}</Typography>
+                              <TableCell align="right" sx={{ borderBottom: "1px solid #f8fafc", py: 2 }}>
+                                <Typography fontWeight={700} color="#334155">{row.total}</Typography>
+                                {row.status === 'completed' && <Chip label="Hoàn thành" size="small" sx={{ mt: 0.5, bgcolor: '#dcfce7', color: '#166534', fontWeight: 700, fontSize: '10px' }} />}
+                                {row.status === 'pending' && <Chip label="Chờ xử lý" size="small" sx={{ mt: 0.5, bgcolor: '#fef9c3', color: '#854d0e', fontWeight: 700, fontSize: '10px' }} />}
+                                {row.status === 'cancelled' && <Chip label="Đã hủy" size="small" sx={{ mt: 0.5, bgcolor: '#fee2e2', color: '#991b1b', fontWeight: 700, fontSize: '10px' }} />}
                               </TableCell>
                             </TableRow>
                           ))}
